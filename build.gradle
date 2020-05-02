@@ -1,0 +1,62 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    jcenter()
+}
+
+project.ext {
+    cxfVersion = "3.1.6"
+    cxfToolArtifacts = [
+        'cxf-tools-wsdlto-frontend-jaxws',
+        'cxf-tools-wsdlto-databinding-jaxb',
+        'cxf-tools-common',
+        'cxf-tools-wsdlto-core'
+    ]
+
+    wsArtifacts = [
+        "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3",
+        "jakarta.jws:jakarta.jws-api:2.1.0",
+        "jakarta.xml.ws:jakarta.xml.ws-api:2.3.3",
+        "javax.annotation:javax.annotation-api:1.3.2"
+    ]
+
+}
+
+// New configuration for CXF dependencies.
+configurations { cxfTool }
+
+sourceSets {
+  main {
+    java.srcDirs += file("$buildDir/generated/cxf")
+  }
+}
+dependencies {
+   cxfToolArtifacts.each { artifact ->
+        cxfTool "org.apache.cxf:$artifact:$cxfVersion"
+    }
+
+    wsArtifacts.each { artifact ->
+        cxfTool "$artifact"
+        api "$artifact"
+    }
+
+}
+
+task generate_ptv3(type: JavaExec) {
+    ext {
+        outputDir = file("$buildDir/generated/cxf")
+    }
+    outputs.upToDateWhen { false }
+    outputs.dir outputDir
+    main = 'org.apache.cxf.tools.wsdlto.WSDLToJava'
+    classpath = configurations.cxfTool
+    args '-d', outputDir
+    args '-verbose'
+    args '-validate'
+    args '-wsdlList'
+    args 'ptv3-wsdl.list'
+}
+
+compileJava.dependsOn(generate_ptv3)
