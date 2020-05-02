@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is used to generate the JAXB Types for ServiceDirectory. Such service does not exists and ist not part of the distribution.
+-->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:HELPER="helper/ServiceDirectory/v3.1" xmlns:HELPERW="helper/ServiceDirectory/WSDL/v3.1" xmlns:SD="http://ws.gematik.de/conn/ServiceDirectory/v3.1"  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="helper/ServiceDirectory/WSDL/v3.1">
+    <documentation>
+        Helper to generate the JAXB Types of ServiceDirectory
+    </documentation>
+    <types>
+        <xs:schema targetNamespace="helper/ServiceDirectory/v3.1">
+            <xs:import schemaLocation="api-telematik/conn/ServiceDirectory.xsd" namespace="http://ws.gematik.de/conn/ServiceDirectory/v3.1"/>
+            <xs:element name="ServiceDirectoryRequest"/>
+            <xs:element name="Fault"/>
+        </xs:schema>
+    </types>
+    <message name="ServiceDirectoryRequestMessage">
+        <part name="parameter" element="HELPER:ServiceDirectoryRequest"/>
+    </message>
+    <message name="ServiceDirectoryResponseMessage">
+        <part name="parameter" element="SD:ConnectorServices"/>
+    </message>
+    <message name="FaultMessage">
+        <part name="parameter" element="HELPER:Fault"/>
+    </message>
+    <portType name="ServiceDirectoryPortType">
+        <operation name="GetConnectorServices">
+            <input message="HELPERW:ServiceDirectoryRequestMessage"/>
+            <output message="HELPERW:ServiceDirectoryResponseMessage"/>
+            <fault name="FaultMessage" message="HELPERW:FaultMessage"/>
+        </operation>
+    </portType>
+    <binding name="ServiceDirectoryBinding" type="HELPERW:ServiceDirectoryPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetConnectorServices">
+            <soap:operation soapAction="helper/ServiceDirectory/v3.1#GetConnectorServices"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="FaultMessage">
+                <soap:fault name="FaultMessage" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+    <service name="ServiceDrectory">
+        <port name="ServiceDirectoryPort" binding="HELPERW:ServiceDirectoryBinding">
+            <soap:address location="http://ti-konnektor/servicedirectory"/>
+        </port>
+    </service>
+</definitions>

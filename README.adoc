@@ -1,2 +1,10 @@
-= gematik Konnektor server side Java WS API
+= jax-ws generator for telematik api
+
+== Usage
+
+----
+git submodule init
+git submodule update
+gradle build
+----
  

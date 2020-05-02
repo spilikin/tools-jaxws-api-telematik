@@ -10,3 +10,4 @@ src/main/wsdl/ptv3/api-telematik/conn/CardService.wsdl
 src/main/wsdl/ptv3/api-telematik/conn/CertificateService.wsdl
 src/main/wsdl/ptv3/api-telematik/conn/amtss/AMTSService.wsdl
 src/main/wsdl/ptv3/api-telematik/conn/AuthSignatureService.wsdl
+src/main/wsdl/ptv3/ServiceDirectory.helper.wsdl
