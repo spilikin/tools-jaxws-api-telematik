@@ -1,12 +1,12 @@
-[submodule "src/main/wsdl/ptv1/api-telematik"]
+[submodule "src/main/wsdl/ptv1"]
 	path = src/main/wsdl/ptv1/api-telematik
-	url = https://github.com/gematik/api-telematik/
-[submodule "src/main/wsdl/ptv3/api-telematik"]
+	url = https://github.com/gematik/api-telematik.git
+[submodule "src/main/wsdl/ptv3"]
 	path = src/main/wsdl/ptv3/api-telematik
-	url = https://github.com/gematik/api-telematik/
-[submodule "src/main/wsdl/ptv4/api-telematik"]
+	url = https://github.com/gematik/api-telematik.git
+[submodule "src/main/wsdl/ptv4"]
 	path = src/main/wsdl/ptv4/api-telematik
-	url = https://github.com/gematik/api-telematik/
-[submodule "src/main/wsdl/ptv5/api-telematik"]
+	url = https://github.com/gematik/api-telematik.git
+[submodule "src/main/wsdl/ptv5"]
 	path = src/main/wsdl/ptv5/api-telematik
-	url = https://github.com/gematik/api-telematik/
+	url = https://github.com/gematik/api-telematik.git

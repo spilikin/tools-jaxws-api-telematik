@@ -1,5 +1,7 @@
 = jax-ws generator for telematik api
 
+NOTE: Currently only PTV3 is supported
+
 == Usage
 
 ----
@@ -8,3 +10,4 @@ git submodule update
 gradle build
 ----
  
+The generated Files can be found in `build/generated`
