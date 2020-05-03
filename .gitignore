@@ -3,3 +3,6 @@ build
 bin
 .vscode
 .settings
+gradle
+gradlew
+gradlew.bat
