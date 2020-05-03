@@ -7,7 +7,7 @@ repositories {
 }
 
 project.ext {
-    cxfVersion = "3.1.6"
+    cxfVersion = "3.3.6"
     cxfToolArtifacts = [
         'cxf-tools-wsdlto-frontend-jaxws',
         'cxf-tools-wsdlto-databinding-jaxb',
@@ -22,7 +22,27 @@ project.ext {
         "javax.annotation:javax.annotation-api:1.3.2"
     ]
 
-    generatedSourcesDir = file("$buildDir/generated/jaxws")
+    generatedSourcesDir = file("$buildDir/generated/jaxws/java")
+    generatedResourcesDir = file("$buildDir/generated/jaxws/resources")
+
+    wsdlBaseDir = file("src/main/wsdl/ptv3")
+
+    wsdlList = [
+        'api-telematik/conn/nfds/DPEService.wsdl',
+        'api-telematik/conn/nfds/NFDService.wsdl',
+        'api-telematik/conn/CardTerminalService.wsdl',
+        'api-telematik/conn/vsds/VSDService.wsdl',
+        'api-telematik/conn/vsds/KvkService.wsdl',
+        'api-telematik/conn/EventService.wsdl',
+        'api-telematik/conn/EncryptionService.wsdl',
+        'api-telematik/conn/SignatureService.wsdl',
+        'api-telematik/conn/CardService.wsdl',
+        'api-telematik/conn/CertificateService.wsdl',
+        'api-telematik/conn/amtss/AMTSService.wsdl',
+        'api-telematik/conn/AuthSignatureService.wsdl',
+        'ServiceDirectory.helper.wsdl'
+    ]
+
 }
 
 // New configuration for CXF dependencies.
@@ -31,6 +51,7 @@ configurations { cxfTool }
 sourceSets {
   main {
     java.srcDirs += generatedSourcesDir
+    resources.srcDirs += generatedResourcesDir
   }
 }
 dependencies {
@@ -45,21 +66,42 @@ dependencies {
 
 }
 
-task generate_ptv3(type: JavaExec) {
-    outputs.upToDateWhen { false }
-    outputs.dir generatedSourcesDir
-    main = 'org.apache.cxf.tools.wsdlto.WSDLToJava'
-    classpath = configurations.cxfTool
-    args '-d', generatedSourcesDir
-    args '-verbose'
-    args '-validate'
-    args '-wsdlList'
-    args 'ptv3-wsdl.list'
+wsdlList.each { wsdl -> 
+    tasks.create(name: "wsdl"+wsdl.replace('/', '_'), type: JavaExec) { 
+        outputs.upToDateWhen { false }
+        outputs.dir generatedSourcesDir
+        systemProperties = [
+            'javax.xml.accessExternalDTD': 'all'
+        ]
+        main = 'org.apache.cxf.tools.wsdlto.WSDLToJava'
+        classpath = configurations.cxfTool
+        args '-d', generatedSourcesDir
+        args '-verbose'
+        args '-validate'
+        args '-wsdlLocation', "classpath:META-INF/wsdl/$wsdl"
+        args "$wsdlBaseDir/$wsdl"
 
+        doLast {
+            println "[INFO] jax-ws files generated: $generatedSourcesDir"
+        }
+    } 
+    compileJava.dependsOn("wsdl"+wsdl.replace('/', '_'))
+
+} 
+
+task cleanUpGenerated {
     doLast {
         delete "$generatedSourcesDir/helper/"
-        println "[INFO] jax-ws files generated: $generatedSourcesDir"
     }
 }
+compileJava.dependsOn(cleanUpGenerated)
 
-compileJava.dependsOn(generate_ptv3)
+task copyResources(type: Copy) {
+    from (wsdlBaseDir) {
+        exclude "*.helper.wsdl"
+        exclude "**/*.md"
+        exclude "**/*.adoc"
+    }
+    into file("$generatedResourcesDir/META-INF/wsdl")
+}
+compileJava.dependsOn(copyResources)
