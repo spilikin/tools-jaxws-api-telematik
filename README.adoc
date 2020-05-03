@@ -10,4 +10,4 @@ git submodule update
 gradle build
 ----
  
-The generated Files can be found in `build/generated`
+The generated files and WSDLs can be found in `build/generated/jaxws`
